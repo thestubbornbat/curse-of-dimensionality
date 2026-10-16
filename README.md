@@ -2,7 +2,8 @@
 
 Small, reproducible demonstrations of high-dimensional geometry effects that
 make nearest-neighbor search, similarity scoring, and density estimation
-behave unintuitively as dimensionality grows.
+behave unintuitively as dimensionality grows: two animations and two
+tutorial notebooks on k-nearest neighbors.
 
 ## Demos
 
@@ -56,6 +57,43 @@ $$
 which converges to 1 for any fixed $\varepsilon > 0$ as $n \to \infty$. The
 script uses this closed form rather than dividing two gamma-function ball
 volumes, which underflow toward zero and lose precision at high dimension.
+
+## Notebooks: KNN and the curse of dimensionality
+
+Two tutorials, in order. Both are saved with their outputs, so you can read
+them on GitHub without running anything.
+
+### `notebooks/00_knn_tutorial.ipynb` — k-nearest neighbors from scratch
+
+Builds KNN by hand, checks it against scikit-learn, then works through every
+practical decision: choosing `k`, scaling features, weighting votes, distance
+metrics, regression, and cost. It ends with a warning: add enough irrelevant
+features and accuracy slides toward a coin flip (0.968 with 2 features, 0.655
+once 200 noise features are added).
+
+### `notebooks/00b_curse_of_dimensionality_tutorial.ipynb` — why KNN breaks
+
+Explains that warning from first principles. Each effect is derived with
+basic probability, checked by simulation, then tied back to KNN:
+
+| Section | Idea |
+|---|---|
+| Space grows exponentially | capturing 1% of the data in 10-D needs 63% of every axis |
+| Where the volume lives | volume sits in corners and thin outer shells |
+| Neighbors move far away | halving the nearest-neighbor distance needs $2^d$ times the data |
+| Distance concentration | $\mathrm{sd}(D)/\mathbb{E}[D] \approx 0.59/\sqrt{d}$ |
+| Signal drowned by noise | each irrelevant feature adds variance, never signal |
+| Hubness | a few central points become everyone's neighbor |
+| Intrinsic dimension | column count is harmless; independent noise is the enemy |
+| Defenses | feature selection and PCA, and when each works |
+
+The notebooks mention a companion lab (`01_knn_high_dim.ipynb`); it isn't
+published yet.
+
+```bash
+python -m pip install -r requirements.txt jupyter
+jupyter lab notebooks/
+```
 
 ## Run it
 
